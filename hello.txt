@@ -1,0 +1,136 @@
+CÂU 1;
+
+let n;
+let arr = [];
+let sumEven = 0;
+let sumOdd = 0;
+let difference;
+
+// Nhập số lượng phần tử n (n <= 20)
+n = parseInt(prompt("Nhập số lượng phần tử của mảng (n <= 20):"));
+while (n > 20 || isNaN(n)) {
+    n = parseInt(prompt("Số lượng phần tử không hợp lệ. Vui lòng nhập lại (n <= 20):"));
+}
+
+// Nhập các phần tử của mảng
+for (let i = 0; i < n; i++) {
+    let element = parseInt(prompt(`Nhập phần tử thứ ${i + 1}:`));
+    arr.push(element);
+}
+
+-----
+CÂU 2 ;
+
+function countUppercaseChars(str) {
+    let count = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z') {
+            count++;
+        }
+    }
+
+    if (count > 0) {
+        return count;
+    } else {
+        return "The Strings is not contain upper char";
+    }
+}
+
+// Ví dụ sử dụng:
+console.log(countUppercaseChars("Hello World")); // Kết quả: 2
+console.log(countUppercaseChars("hello world")); // Kết quả: The Strings is not contain upper char
+console.log(countUppercaseChars("JAVASCRIPT")); // Kết quả: 10
+
+-------
+CÂU 3;
+
+function isPrime(num) {
+    if (num <= 1) {
+        return false;
+    }
+    for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function findPrimes(arr) {
+    const primeNumbers = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (isPrime(arr[i])) {
+            primeNumbers.push(arr[i]);
+        }
+    }
+    return primeNumbers;
+}
+function findAndSortPrimes(arr) {
+    const primeNumbers = findPrimes(arr);
+    primeNumbers.sort((a, b) => a - b);
+    return primeNumbers;
+}
+
+const numbers = [10, 2, 7, 13, 5, 11, 4, 9, 17, 1];
+const result = findAndSortPrimes(numbers);
+console.log(result);
+
+------
+CÂU 4;
+class DienThoai {
+    constructor(maDienThoai, ten, hangSanXuat, gia) {
+        this.maDienThoai = maDienThoai;
+        this.ten = ten;
+        this.hangSanXuat = hangSanXuat;
+        this.gia = gia;
+    }
+
+    getMaDienThoai() { return this.maDienThoai; }
+    getTen() { return this.ten; }
+    getHangSanXuat() { return this.hangSanXuat; }
+    getGia() { return this.gia; }
+
+    setMaDienThoai(maDienThoai) { this.maDienThoai = maDienThoai; }
+    setTen(ten) { this.ten = ten; }
+    setHangSanXuat(hangSanXuat) { this.hangSanXuat = hangSanXuat; }
+    setGia(gia) { this.gia = gia; }
+
+    toString() {
+        return `Mã: ${this.maDienThoai}, Tên: ${this.ten}, Hãng: ${this.hangSanXuat}, Giá: ${this.gia}`;
+    }
+}
+
+// Dữ liệu ban đầu
+let danhSachDienThoai = [
+    new DienThoai("IP13", "iPhone 13", "Apple", 20000000),
+    new DienThoai("SSG21", "Samsung Galaxy S21", "Samsung", 18000000),
+    new DienThoai("XM12", "Xiaomi 12", "Xiaomi", 15000000)
+];
+
+// Hàm hiển thị danh sách
+function hienThiDanhSach() {
+    console.log("--- Danh sách điện thoại (đã sắp xếp theo tên) ---");
+    const danhSachSapXep = [...danhSachDienThoai].sort((a, b) => a.getTen().localeCompare(b.getTen()));
+    danhSachSapXep.forEach(dt => console.log(dt.toString()));
+}
+
+// Hàm thêm điện thoại mới (dùng prompt để nhập liệu)
+function themDienThoaiMoi() {
+    const maDienThoai = prompt("Nhập mã điện thoại:");
+    const ten = prompt("Nhập tên điện thoại:");
+    const hangSanXuat = prompt("Nhập hãng sản xuất:");
+    const gia = parseFloat(prompt("Nhập giá:"));
+
+    if (maDienThoai && ten && hangSanXuat && !isNaN(gia)) {
+        const dienThoaiMoi = new DienThoai(maDienThoai, ten, hangSanXuat, gia);
+        danhSachDienThoai.push(dienThoaiMoi);
+        console.log("\n--- Đã thêm điện thoại mới ---");
+        hienThiDanhSach();
+    } else {
+        console.log("\n--- Dữ liệu không hợp lệ. Vui lòng thử lại. ---");
+    }
+}
+
+// Chạy chương trình
+hienThiDanhSach();
+
