@@ -1,0 +1,200 @@
+BankManager.java
+
+  
+  package com.degym;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class BankManager {
+    private List<BankAccount> accounts = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
+
+    public void displayMenu() {
+        while (true) {
+            System.out.println("\n--- MENU CHỨC NĂNG ---");
+            System.out.println("1. Thêm tài khoản tiết kiệm");
+            System.out.println("2. Thêm tài khoản thanh toán");
+            System.out.println("3. Hiển thị tất cả tài khoản");
+            System.out.println("4. Thoát");
+            System.out.print("Chọn chức năng: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    addSavingsAccount();
+                    break;
+                case 2:
+                    addPaymentAccount();
+                    break;
+                case 3:
+                    displayAllAccounts();
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Lựa chọn không hợp lệ.");
+            }
+        }
+    }
+
+    private void addSavingsAccount() {
+        // Implement logic to collect input and create a SavingsAccount object
+        // Example:
+        System.out.println("Thêm tài khoản tiết kiệm (input data):");
+        SavingsAccount sa = new SavingsAccount("S001", "123456", "Nguyen Van A", LocalDate.now(), 10000.0, LocalDate.now(), 5.5, 12);
+        accounts.add(sa);
+        System.out.println("Đã thêm tài khoản tiết kiệm.");
+    }
+
+    private void addPaymentAccount() {
+        // Implement logic to collect input and create a PaymentAccount object
+        // Example:
+        System.out.println("Thêm tài khoản thanh toán (input data):");
+        PaymentAccount pa = new PaymentAccount("P001", "654321", "Tran Thi B", LocalDate.now(), "CARD123", 5000.0);
+        accounts.add(pa);
+        System.out.println("Đã thêm tài khoản thanh toán.");
+    }
+
+    private void displayAllAccounts() {
+        for (BankAccount account : accounts) {
+            System.out.println("-----------------");
+            account.displayAccountInfo();
+            // Polymorphic call to specific processing method
+            account.processMonthlyInterestOrFee();
+        }
+        System.out.println("-----------------");
+    }
+
+    public static void main(String[] args) {
+        BankManager manager = new BankManager();
+        manager.displayMenu();
+    }
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  BankAccount.java
+
+
+  package com.degym;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public abstract class BankAccount {
+    private String accountId;
+    private String accountNumber;
+    private String accountHolderName;
+    private LocalDate creationDate;
+
+    // Constructor
+    public BankAccount(String accountId, String accountNumber, String accountHolderName, LocalDate creationDate) {
+        this.accountId = accountId;
+        this.accountNumber = accountNumber;
+        this.accountHolderName = accountHolderName;
+        this.creationDate = creationDate;
+    }
+
+    // Abstract method for business logic (e.g., calculating interest or fees)
+    public abstract void processMonthlyInterestOrFee();
+
+    // Generic method to display common information
+    public void displayAccountInfo() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        System.out.println("Id tài khoản: " + accountId);
+        System.out.println("Mã tài khoản: " + accountNumber);
+        System.out.println("Tên chủ tài khoản: " + accountHolderName);
+        System.out.println("Ngày tạo tài khoản: " + creationDate.format(formatter));
+    }
+
+    // Getters and Setters (omitted for brevity)
+    public String getAccountNumber() { return accountNumber; }
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  SavingsAccount.java
+
+
+  package com.degym;
+
+import java.time.LocalDate;
+
+public class SavingsAccount extends BankAccount {
+    private double savingsAmount;
+    private LocalDate startDate;
+    private double interestRate; // annual interest rate
+    private int termInMonths;
+
+    // Constructor
+    public SavingsAccount(String accountId, String accountNumber, String accountHolderName, LocalDate creationDate,
+                          double savingsAmount, LocalDate startDate, double interestRate, int termInMonths) {
+        super(accountId, accountNumber, accountHolderName, creationDate);
+        this.savingsAmount = savingsAmount;
+        this.startDate = startDate;
+        this.interestRate = interestRate;
+        this.termInMonths = termInMonths;
+    }
+
+    @Override
+    public void processMonthlyInterestOrFee() {
+        // Implement monthly interest calculation logic here
+        // (e.g., check if term is completed, calculate interest, add to balance)
+        System.out.println("Processing monthly interest for savings account...");
+    }
+
+    @Override
+    public void displayAccountInfo() {
+        super.displayAccountInfo();
+        System.out.println("Số tiền gửi tiết kiệm: " + savingsAmount);
+        System.out.println("Kỳ hạn (tháng): " + termInMonths);
+        // Display other specific info
+    }
+
+    // Getters and Setters (omitted for brevity)
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  PaymentAccount.java
+
+
+  package com.degym;
+
+import java.time.LocalDate;
+
+public class PaymentAccount extends BankAccount {
+    private String cardNumber;
+    private double currentBalance;
+
+    // Constructor
+    public PaymentAccount(String accountId, String accountNumber, String accountHolderName, LocalDate creationDate,
+                          String cardNumber, double currentBalance) {
+        super(accountId, accountNumber, accountHolderName, creationDate);
+        this.cardNumber = cardNumber;
+        this.currentBalance = currentBalance;
+    }
+
+    @Override
+    public void processMonthlyInterestOrFee() {
+        // Implement monthly fee logic or no logic, as appropriate
+        System.out.println("No monthly fee processing needed for payment account.");
+    }
+
+    @Override
+    public void displayAccountInfo() {
+        super.displayAccountInfo();
+        System.out.println("Số thẻ: " + cardNumber);
+        System.out.println("Số tiền trong tài khoản: " + currentBalance);
+    }
+
+    // Methods for deposit and withdrawal can be implemented here or in the abstract class and overridden
+    public void withdraw(double amount) {
+        if (currentBalance >= amount) {
+            currentBalance -= amount;
+            System.out.println("Rút tiền thành công. Số dư mới: " + currentBalance);
+        } else {
+            System.out.println("Số dư không đủ.");
+        }
+    }
+
+    // Getters and Setters (omitted for brevity)
+}
